@@ -67,37 +67,62 @@
     // TIP: Here's an example of a function that needs to iterate, which we've
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
-    var result = -1;
+    // var result = -1;
+    //
+    // _.each(array, function(item, index) {
+    //   if (item === target && result === -1) {
+    //     result = index;
+    //   }
+    // });
+    //
+    // return result;
 
-    _.each(array, function(item, index) {
-      if (item === target && result === -1) {
-        result = index;
-      }
-    });
-
-    return result;
+    for (let i = 0, length = array.length; i < length; ++i){
+    if (array[i] === target) {
+      return i;
+    }
+  }
+  return -1;
   };
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    const passed = [];
+    for (let i = 0; i < collection.length; i++) {
+      if (test(collection[i])) {
+        passed.push(collection[i]);
+      }
+    }
+    return passed;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, (e) => !test(e));
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    const toReturn = [];
+    for (let i = 0; i < array.length; i++) {
+      if (!toReturn.includes(array[i])) {
+        toReturn.push(array[i]);
+      }
+    }
+    return toReturn;
   };
-
-
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    const results = [];
+    _.each(collection, (value, index) => {
+      results.push(iterator(value, index, collection))
+    })
+    return results;
   };
 
   /*
@@ -139,6 +164,18 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    let i = 0;
+    let value;
+    if (typeof accumulator === 'undefined') {
+      i = 1;
+      value = collection[0];
+    } else {
+      value = accumulator;
+    }
+    for (let length = collection.length; i < length; i++) {
+      value = iterator(value, collection[i]);
+    }
+    return value;
   };
 
   // Determine if the array or object contains a given value (using `===`).
