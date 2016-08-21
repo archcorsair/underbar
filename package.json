@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "name": "2016-09-underbar",
+  "devDependencies": {
+    "eslint-config-steelbrain": "^1.0.4",
+    "jasmine-node": "^1.14.5"
+  },
+  "eslintConfig": {
+    "rules": {
+      "no-unused-vars": "warn",
+      "no-prototype-builtins": "off",
+      "semi": [
+        1,
+        "always"
+      ],
+      "no-console": "off"
+    },
+    "extends": "steelbrain",
+    "env": {
+      "es6": true,
+      "node": true,
+      "jasmine": true
+    }
+  }
+}
