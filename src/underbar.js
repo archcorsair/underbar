@@ -165,17 +165,25 @@
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
     let i = 0;
-    let value;
-    if (typeof accumulator === 'undefined') {
-      i = 1;
-      value = collection[0];
+    if (Array.isArray(collection)) {
+      if (typeof accumulator === 'undefined') {
+        accumulator = collection[0]; // if accum not provided set first elem
+        i = 1; // make sure loop starts at index 1 instead
+      }
+      for (let length = collection.length; i < length; i++) {
+        accumulator = iterator(accumulator, collection[i]);
+      }
     } else {
-      value = accumulator;
+      const keysArray = Object.keys(collection);
+      if (typeof accumulator === 'undefined') {
+        accumulator = collection[keysArray[0]];
+        i = 1;
+      }
+      for (let length = keysArray.length; i < length; i++) {
+        accumulator = iterator(accumulator, collection[keysArray[i]]);
+      }
     }
-    for (let length = collection.length; i < length; i++) {
-      value = iterator(value, collection[i]);
-    }
-    return value;
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -194,10 +202,20 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    if (typeof iterator === 'undefined') {
+      iterator = (value) => {
+        if (value) return true;
+        return false;
+      };
+    }
     return _.reduce(collection, (prev, curr) => {
       if (!prev) {
         return false;
       }
+      if (iterator(curr)) {
+        return true;
+      }
+      return false;
     }, true);
   };
 
@@ -205,6 +223,16 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    if (typeof iterator === 'undefined') {
+      iterator = (value) => {
+        if (value) return true;
+        return false;
+      };
+    }
+    function something(value) {
+      return !iterator(value);
+    }
+    return !_.every(collection, something);
   };
 
 
