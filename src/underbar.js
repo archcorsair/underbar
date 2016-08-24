@@ -77,7 +77,7 @@
     //
     // return result;
 
-    for (let i = 0, length = array.length; i < length; ++i){
+    for (let i = 0, length = array.length; i < length; i++){
     if (array[i] === target) {
       return i;
     }
@@ -204,8 +204,7 @@
     // TIP: Try re-using reduce() here.
     if (typeof iterator === 'undefined') {
       iterator = (value) => {
-        if (value) return true;
-        return false;
+        return value ? true : false;
       };
     }
     return _.reduce(collection, (prev, curr) => {
@@ -225,14 +224,13 @@
     // TIP: There's a very clever way to re-use every() here.
     if (typeof iterator === 'undefined') {
       iterator = (value) => {
-        if (value) return true;
-        return false;
+        return value ? true : false;
       };
     }
-    function something(value) {
+    function flipIt(value) {
       return !iterator(value);
     }
-    return !_.every(collection, something);
+    return !_.every(collection, flipIt);
   };
 
 
