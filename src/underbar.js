@@ -254,9 +254,9 @@
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(source, ...objects) {
     for (let i = 0; i < objects.length; i++) {
-      const keysArray = Object.keys(objects[i]);
-      for (let j = 0; j < keysArray.length; j++) {
-        source[keysArray[j]] = objects[i][keysArray[j]];
+      const object = objects[i];
+      for (const key in object) {
+        source[key] = object[key];
       }
     }
     return source;
