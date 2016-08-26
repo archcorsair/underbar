@@ -296,11 +296,11 @@
 
     // TIP: We'll return a new function that delegates to the old one, but only
     // if it hasn't been called before.
-    return function() {
+    return function(...args) {
       if (!alreadyCalled) {
         // TIP: .apply(this, arguments) is the standard way to pass on all of the
         // infromation from one function call to another.
-        result = func.apply(this, arguments);
+        result = func(...args);
         alreadyCalled = true;
       }
       // The new function always returns the originally computed result.
@@ -317,6 +317,15 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    const cache = {};
+    return function(...args) {
+      const cacheKey = JSON.stringify(args);
+      if (!cache.hasOwnProperty(cacheKey)) {
+        const result = func(...args);
+        cache[cacheKey] = result;
+      }
+      return cache[cacheKey];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -325,7 +334,8 @@
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  _.delay = function(func, wait) {
+  _.delay = function(func, wait, ...args) {
+    return setTimeout(func, wait, ...args);
   };
 
 
@@ -340,6 +350,18 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+    const toReturn = array.slice();
+    let count = array.length;
+    let p1;
+    let p2;
+    while (count) {
+      p2 = Math.floor(Math.random() * count--);
+      p1 = toReturn[count];
+      toReturn[count] = toReturn[p2];
+      toReturn[p2] = p1;
+    }
+    return toReturn;
   };
 
 
