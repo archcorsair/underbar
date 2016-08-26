@@ -376,6 +376,13 @@
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    const toReturn = [];
+    // If functionOrKey is a key we reference the String.prototype method, otherwise use the func.
+    const func = typeof functionOrKey === 'string' ? String.prototype[functionOrKey] : functionOrKey;
+    for (let i = 0, length = collection.length; i < length; ++i) {
+      toReturn.push(func.apply(collection[i], args));
+    }
+    return toReturn;
   };
 
   // Sort the object's values by a criterion produced by an iterator.
